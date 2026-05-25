@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI CRM — Tech Map Hanel PT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --white: #ffffff;
+    --off: #f7f6f3;
+    --ink: #1a1917;
+    --ink2: #4a4845;
+    --ink3: #8c8a84;
+    --border: #e8e5df;
+    --border2: #d4d0c8;
+    --day:   #1a6b4a; --day-bg: #edf7f2; --day-border: #a8dbc3;
+    --week:  #1e4fa8; --week-bg: #eef2fc; --week-border: #adc0ef;
+    --month: #7a2d9e; --month-bg: #f5eefb; --month-border: #cfa8e8;
+    --quarter: #b84a00; --quarter-bg: #fdf0e8; --quarter-border: #f0b88a;
+    --r: 8px; --r-lg: 14px;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--ink); min-height: 100vh; padding: 48px 32px 80px; }
+
+  /* HEADER */
+  .header { max-width: 1200px; margin: 0 auto 48px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  .brand { font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
+  h1 { font-size: 32px; font-weight: 300; letter-spacing: -.02em; line-height: 1.15; }
+  h1 em { font-style: italic; font-weight: 300; }
+  .header-meta { font-size: 13px; color: var(--ink3); font-family: 'DM Mono', monospace; font-weight: 300; text-align: right; line-height: 1.7; }
+
+  /* SECTION EYEBROW */
+  .wrap { max-width: 1200px; margin: 0 auto 40px; }
+  .eyebrow { font-size: 10px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--ink3); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* PIPELINE */
+  .pipeline { display: flex; align-items: stretch; background: var(--off); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+  .pipe-step { flex: 1; padding: 16px 18px; position: relative; }
+  .pipe-step:not(:last-child) { border-right: 1px solid var(--border); }
+  .pipe-step:not(:last-child)::after { content: '→'; position: absolute; right: -10px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--ink3); z-index: 2; background: var(--off); padding: 2px 4px; }
+  .pipe-label { font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
+  .pipe-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .chip { font-size: 12px; padding: 3px 9px; border-radius: 100px; border: 1px solid var(--border2); background: var(--white); color: var(--ink2); white-space: nowrap; }
+  .chip.warn { border-color: var(--quarter-border); background: var(--quarter-bg); color: var(--quarter); }
+
+  /* BADGES */
+  .badge { display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 100px; letter-spacing: .04em; white-space: nowrap; }
+  .badge.high   { background: #d4f0e4; color: #0f6e3a; border: 1px solid #9fd8be; }
+  .badge.medium { background: #fdecd2; color: #924500; border: 1px solid #f0c48a; }
+  .badge.low    { background: #fce8e8; color: #a12020; border: 1px solid #f0aaaa; }
+  .badge.hard   { background: #8b1a1a; color: #ffffff; border: 1px solid #6b1414; }
+
+  /* ── BÁO CÁO TABLE ── */
+  .report-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; font-size: 13px; }
+  .report-table thead tr { background: var(--off); }
+  .report-table th { padding: 11px 14px; text-align: left; font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--ink3); border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); white-space: nowrap; }
+  .report-table th:last-child { border-right: none; }
+  .report-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); vertical-align: top; line-height: 1.5; color: var(--ink2); }
+  .report-table td:last-child { border-right: none; }
+  .report-table tr:last-child td { border-bottom: none; }
+  .report-table tr:hover td { background: var(--off); }
+
+  /* cycle tag in table */
+  .cycle-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; white-space: nowrap; }
+  .cycle-tag .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .cycle-tag.day   { background: var(--day-bg);     color: var(--day);     border: 1px solid var(--day-border); }
+  .cycle-tag.day .dot   { background: var(--day); }
+  .cycle-tag.week  { background: var(--week-bg);    color: var(--week);    border: 1px solid var(--week-border); }
+  .cycle-tag.week .dot  { background: var(--week); }
+  .cycle-tag.month { background: var(--month-bg);   color: var(--month);   border: 1px solid var(--month-border); }
+  .cycle-tag.month .dot { background: var(--month); }
+  .cycle-tag.qtr   { background: var(--quarter-bg); color: var(--quarter); border: 1px solid var(--quarter-border); }
+  .cycle-tag.qtr .dot   { background: var(--quarter); }
+
+  .module-name { font-weight: 500; color: var(--ink); display: block; margin-bottom: 3px; }
+  .module-desc { font-size: 11.5px; color: var(--ink3); }
+  .items-list { margin: 0; padding: 0; list-style: none; }
+  .items-list li { font-size: 12px; color: var(--ink3); padding-left: 10px; position: relative; line-height: 1.7; }
+  .items-list li::before { content: '·'; position: absolute; left: 2px; }
+  .tech-mono { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 300; color: var(--ink3); }
+
+  /* ALERTS */
+  .alerts-row { max-width: 1200px; margin: 28px auto 0; background: #fffbf5; border: 1px solid #f0c88a; border-radius: var(--r-lg); padding: 16px 22px; }
+  .alerts-head { font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: #b45a00; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .alerts-head .dot { width: 6px; height: 6px; border-radius: 50%; background: #e07a00; }
+  .alerts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .alert-card { background: var(--white); border: 1px solid #f0c88a; border-radius: var(--r); padding: 10px 12px; }
+  .alert-title { font-size: 12px; font-weight: 500; color: #7a3c00; margin-bottom: 3px; }
+  .alert-eg { font-size: 11px; color: #b45a00; line-height: 1.5; font-style: italic; }
+
+  /* AI FEATURES */
+  .ai-row { max-width: 1200px; margin: 20px auto 0; border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+  .ai-head { padding: 14px 22px; background: var(--off); border-bottom: 1px solid var(--border); font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); }
+  .ai-features { display: grid; grid-template-columns: repeat(5, 1fr); padding: 16px; gap: 10px; }
+  .ai-feat { padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--r); }
+  .ai-feat-title { font-size: 12.5px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+  .ai-feat-desc { font-size: 11px; color: var(--ink3); line-height: 1.5; }
+
+  /* MATRIX */
+  .matrix-wrap { max-width: 1200px; margin: 28px auto 0; }
+  .matrix-subtitle { font-size: 13px; color: var(--ink3); margin-bottom: 20px; }
+  .matrix-outer {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    grid-template-rows: auto 28px;
+    gap: 0;
+  }
+  .matrix-yaxis {
+    grid-row: 1; grid-column: 1;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .matrix-yaxis-label {
+    font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink3); white-space: nowrap;
+    transform: rotate(-90deg);
+    writing-mode: horizontal-tb;
+  }
+  .matrix-body { grid-row: 1; grid-column: 2; }
+  .matrix-xaxis { grid-row: 2; grid-column: 2; display: flex; justify-content: space-between; padding: 8px 0 0; }
+  .matrix-xaxis-label { font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--ink3); }
+  .matrix-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 10px;
+  }
+  .quadrant {
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .quadrant-label {
+    font-size: 9px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase;
+    margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+  }
+  .quadrant-label::after { content: ''; flex: 1; height: 1px; }
+
+  /* Q1 top-left: Khó + Ít ưu tiên — gray */
+  .q-hard-low { background: #fafaf8; }
+  .q-hard-low .quadrant-label { color: var(--ink3); }
+  .q-hard-low .quadrant-label::after { background: var(--border); }
+
+  /* Q2 top-right: Khó + Cao — dark teal/navy, priority */
+  .q-hard-high { background: #0f1f18; }
+  .q-hard-high .quadrant-label { color: #4ecb8d; }
+  .q-hard-high .quadrant-label::after { background: #1e4032; }
+
+  /* Q3 bottom-left: Dễ + Ít ưu tiên — light */
+  .q-easy-low { background: #f7f6f3; }
+  .q-easy-low .quadrant-label { color: var(--ink3); }
+  .q-easy-low .quadrant-label::after { background: var(--border); }
+
+  /* Q4 bottom-right: Dễ + Làm ngay — blue */
+  .q-easy-high { background: #f0f5ff; }
+  .q-easy-high .quadrant-label { color: #1e4fa8; }
+  .q-easy-high .quadrant-label::after { background: #adc0ef; }
+
+  .mcard {
+    border-radius: var(--r);
+    padding: 10px 12px;
+    flex-shrink: 0;
+  }
+  .mcard-title { font-size: 12.5px; font-weight: 500; margin-bottom: 2px; line-height: 1.3; }
+  .mcard-desc { font-size: 11px; line-height: 1.5; }
+
+  /* card themes */
+  .q-hard-high .mcard { background: #162d22; border: 1px solid #1e4032; }
+  .q-hard-high .mcard-title { color: #7ee8b0; }
+  .q-hard-high .mcard-desc { color: #4ecb8d; }
+  .q-hard-high .mcard.priority { border-color: #4ecb8d; }
+
+  .q-hard-low .mcard { background: var(--white); border: 1px solid var(--border); }
+  .q-hard-low .mcard-title { color: var(--ink2); }
+  .q-hard-low .mcard-desc { color: var(--ink3); }
+
+  .q-easy-high .mcard { background: #e8efff; border: 1px solid #adc0ef; }
+  .q-easy-high .mcard-title { color: #1e4fa8; }
+  .q-easy-high .mcard-desc { color: #3a6bc4; }
+  .q-easy-high .mcard.go { border-color: #1e4fa8; }
+
+  .q-easy-low .mcard { background: var(--white); border: 1px solid var(--border); }
+  .q-easy-low .mcard-title { color: var(--ink3); }
+  .q-easy-low .mcard-desc { color: var(--ink3); opacity: .7; }
+
+  .mpill {
+    display: inline-block; font-size: 9.5px; font-weight: 500; letter-spacing: .06em;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 100px; margin-top: 5px;
+  }
+  .mpill-fire { background: #ff4d1a; color: #fff; }
+  .mpill-go   { background: #1e4fa8; color: #fff; }
+  .empty-note { font-size: 12px; color: var(--ink3); opacity: .5; font-style: italic; margin: auto; text-align: center; }
+
+  /* FOOTER */
+  .footer { max-width: 1200px; margin: 40px auto 0; padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--ink3); font-family: 'DM Mono', monospace; }
+  .legend { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+
+  /* NOTE BOX */
+  .note-box { max-width: 1200px; margin: 16px auto 0; background: #f5eefb; border: 1px solid #cfa8e8; border-radius: var(--r-lg); padding: 14px 20px; display: flex; gap: 12px; align-items: flex-start; }
+  .note-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+  .note-text { font-size: 12px; color: #5a1e80; line-height: 1.6; }
+  .note-text strong { font-weight: 500; }
+
+  /* PREREQ SECTION */
+  .prereq-wrap { max-width: 1200px; margin: 28px auto 0; }
+  .prereq-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .prereq-card {
+    border-radius: var(--r-lg); overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .prereq-head {
+    background: #8b1a1a; color: #fff;
+    padding: 12px 16px;
+  }
+  .prereq-head-title { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+  .prereq-head-sub { font-size: 10.5px; opacity: .75; letter-spacing: .04em; }
+  .prereq-body { padding: 14px 16px; background: var(--white); display: flex; flex-direction: column; gap: 8px; }
+  .prereq-item { display: flex; gap: 10px; align-items: flex-start; }
+  .prereq-num {
+    flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+    background: #fce8e8; color: #8b1a1a;
+    font-size: 10px; font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .prereq-text { font-size: 12px; color: var(--ink2); line-height: 1.6; }
+  .prereq-text strong { font-weight: 500; color: var(--ink); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="brand">Hanel PT · AI CRM Intelligence</div>
+    <h1>Tech Map — <em>AI Sales Analytics</em></h1>
+  </div>
+  <div class="header-meta">
+    Luồng dữ liệu · Khả thi · Stack kỹ thuật<br>
+    v1.0 — 2025
+  </div>
+</div>
+
+<!-- PIPELINE SVG -->
+<div class="wrap">
+  <div class="eyebrow">Luồng dữ liệu tổng quan</div>
+  <div style="background:#fafaf8; border:1px solid var(--border); border-radius:var(--r-lg); padding:28px 24px 20px; overflow:hidden;">
+    <svg width="100%" viewBox="0 0 1100 340" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#b4b0a8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+        <marker id="arr-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#8b1a1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- ── LAYER LABELS ── -->
+      <text x="100" y="16" text-anchor="middle" font-size="9" font-weight="500" fill="#8c8a84" letter-spacing="1.5">NGUỒN DỮ LIỆU</text>
+      <text x="310" y="16" text-anchor="middle" font-size="9" font-weight="500" fill="#8c8a84" letter-spacing="1.5">XỬ LÝ</text>
+      <text x="530" y="16" text-anchor="middle" font-size="9" font-weight="500" fill="#8c8a84" letter-spacing="1.5">LƯU TRỮ</text>
+      <text x="740" y="16" text-anchor="middle" font-size="9" font-weight="500" fill="#8c8a84" letter-spacing="1.5">AI ENGINE</text>
+      <text x="970" y="16" text-anchor="middle" font-size="9" font-weight="500" fill="#8c8a84" letter-spacing="1.5">OUTPUT</text>
+
+      <!-- ── COLUMN SEPARATORS ── -->
+      <line x1="205" y1="24" x2="205" y2="320" stroke="#e8e5df" stroke-width="1" stroke-dasharray="4 3"/>
+      <line x1="420" y1="24" x2="420" y2="320" stroke="#e8e5df" stroke-width="1" stroke-dasharray="4 3"/>
+      <line x1="635" y1="24" x2="635" y2="320" stroke="#e8e5df" stroke-width="1" stroke-dasharray="4 3"/>
+      <line x1="855" y1="24" x2="855" y2="320" stroke="#e8e5df" stroke-width="1" stroke-dasharray="4 3"/>
+
+      <!-- ══ COL 1: NGUỒN DỮ LIỆU ══ -->
+      <!-- Ghi âm cuộc gọi -->
+      <rect x="18" y="34" width="164" height="38" rx="8" fill="#fff" stroke="#d4d0c8" stroke-width="0.8"/>
+      <text x="100" y="57" text-anchor="middle" font-size="12" font-weight="500" fill="#3d3d3a">Ghi âm cuộc gọi</text>
+      <!-- Zalo / Chat -->
+      <rect x="18" y="82" width="164" height="38" rx="8" fill="#fff" stroke="#d4d0c8" stroke-width="0.8"/>
+      <text x="100" y="105" text-anchor="middle" font-size="12" font-weight="500" fill="#3d3d3a">Zalo / Chat</text>
+      <!-- CRM nhập tay -->
+      <rect x="18" y="130" width="164" height="38" rx="8" fill="#fff" stroke="#d4d0c8" stroke-width="0.8"/>
+      <text x="100" y="153" text-anchor="middle" font-size="12" font-weight="500" fill="#3d3d3a">CRM nhập tay</text>
+      <!-- Email -->
+      <rect x="18" y="178" width="164" height="38" rx="8" fill="#fff" stroke="#d4d0c8" stroke-width="0.8"/>
+      <text x="100" y="201" text-anchor="middle" font-size="12" font-weight="500" fill="#3d3d3a">Email</text>
+      <!-- Demo / khảo sát -->
+      <rect x="18" y="226" width="164" height="38" rx="8" fill="#fff" stroke="#d4d0c8" stroke-width="0.8"/>
+      <text x="100" y="249" text-anchor="middle" font-size="12" font-weight="500" fill="#3d3d3a">Demo / Khảo sát</text>
+
+      <!-- ══ COL 2: XỬ LÝ ══ -->
+      <!-- STT Whisper — red border (cần VoIP) -->
+      <rect x="225" y="34" width="168" height="50" rx="8" fill="#fff7f7" stroke="#8b1a1a" stroke-width="1"/>
+      <text x="309" y="54" text-anchor="middle" font-size="12" font-weight="500" fill="#8b1a1a">STT — Whisper</text>
+      <text x="309" y="71" text-anchor="middle" font-size="10" fill="#b44a4a">⚠ Cần VoIP trước</text>
+      <!-- Webhook parser -->
+      <rect x="225" y="96" width="168" height="38" rx="8" fill="#fff" stroke="#d4d0c8" stroke-width="0.8"/>
+      <text x="309" y="119" text-anchor="middle" font-size="12" font-weight="500" fill="#3d3d3a">Webhook parser</text>
+      <!-- CRM API sync -->
+      <rect x="225" y="144" width="168" height="38" rx="8" fill="#fff" stroke="#d4d0c8" stroke-width="0.8"/>
+      <text x="309" y="167" text-anchor="middle" font-size="12" font-weight="500" fill="#3d3d3a">CRM API sync</text>
+      <!-- Email IMAP -->
+      <rect x="225" y="192" width="168" height="38" rx="8" fill="#fff" stroke="#d4d0c8" stroke-width="0.8"/>
+      <text x="309" y="215" text-anchor="middle" font-size="12" font-weight="500" fill="#3d3d3a">Email IMAP parser</text>
+      <!-- Form collect -->
+      <rect x="225" y="240" width="168" height="38" rx="8" fill="#fff" stroke="#d4d0c8" stroke-width="0.8"/>
+      <text x="309" y="263" text-anchor="middle" font-size="12" font-weight="500" fill="#3d3d3a">Form / checklist</text>
+
+      <!-- ══ COL 3: LƯU TRỮ ══ -->
+      <!-- Data lake -->
+      <rect x="440" y="34" width="168" height="50" rx="8" fill="#edf7f2" stroke="#a8dbc3" stroke-width="0.8"/>
+      <text x="524" y="54" text-anchor="middle" font-size="12" font-weight="500" fill="#1a6b4a">Data lake</text>
+      <text x="524" y="72" text-anchor="middle" font-size="10" fill="#1a6b4a">S3 / GCS — ghi âm, file</text>
+      <!-- PostgreSQL -->
+      <rect x="440" y="96" width="168" height="50" rx="8" fill="#edf7f2" stroke="#a8dbc3" stroke-width="0.8"/>
+      <text x="524" y="116" text-anchor="middle" font-size="12" font-weight="500" fill="#1a6b4a">PostgreSQL</text>
+      <text x="524" y="134" text-anchor="middle" font-size="10" fill="#1a6b4a">CRM structured data</text>
+      <!-- Vector DB -->
+      <rect x="440" y="158" width="168" height="50" rx="8" fill="#edf7f2" stroke="#a8dbc3" stroke-width="0.8"/>
+      <text x="524" y="178" text-anchor="middle" font-size="12" font-weight="500" fill="#1a6b4a">Vector DB</text>
+      <text x="524" y="196" text-anchor="middle" font-size="10" fill="#1a6b4a">Transcript embeddings</text>
+
+      <!-- ══ COL 4: AI ENGINE ══ -->
+      <!-- LLM -->
+      <rect x="660" y="34" width="168" height="50" rx="8" fill="#eef2fc" stroke="#adc0ef" stroke-width="0.8"/>
+      <text x="744" y="54" text-anchor="middle" font-size="12" font-weight="500" fill="#1e4fa8">LLM (GPT / Claude)</text>
+      <text x="744" y="72" text-anchor="middle" font-size="10" fill="#1e4fa8">Summarize · Score · Q&amp;A</text>
+      <!-- ML Classifier -->
+      <rect x="660" y="96" width="168" height="50" rx="8" fill="#eef2fc" stroke="#adc0ef" stroke-width="0.8"/>
+      <text x="744" y="116" text-anchor="middle" font-size="12" font-weight="500" fill="#1e4fa8">ML Classifier</text>
+      <text x="744" y="134" text-anchor="middle" font-size="10" fill="#1e4fa8">Deal scoring · Anomaly</text>
+      <!-- STT Score -->
+      <rect x="660" y="158" width="168" height="50" rx="8" fill="#eef2fc" stroke="#adc0ef" stroke-width="0.8"/>
+      <text x="744" y="178" text-anchor="middle" font-size="12" font-weight="500" fill="#1e4fa8">STT + Sentiment</text>
+      <text x="744" y="196" text-anchor="middle" font-size="10" fill="#1e4fa8">Chấm điểm giao tiếp</text>
+      <!-- Rule engine -->
+      <rect x="660" y="220" width="168" height="50" rx="8" fill="#eef2fc" stroke="#adc0ef" stroke-width="0.8"/>
+      <text x="744" y="240" text-anchor="middle" font-size="12" font-weight="500" fill="#1e4fa8">Rule engine</text>
+      <text x="744" y="258" text-anchor="middle" font-size="10" fill="#1e4fa8">Cảnh báo · follow-up</text>
+
+      <!-- ══ COL 5: OUTPUT ══ -->
+      <!-- Dashboard -->
+      <rect x="875" y="34" width="200" height="38" rx="8" fill="#fdf0e8" stroke="#f0b88a" stroke-width="0.8"/>
+      <text x="975" y="57" text-anchor="middle" font-size="12" font-weight="500" fill="#7a3c00">Dashboard web / app</text>
+      <!-- Zalo Telegram -->
+      <rect x="875" y="82" width="200" height="38" rx="8" fill="#fdf0e8" stroke="#f0b88a" stroke-width="0.8"/>
+      <text x="975" y="105" text-anchor="middle" font-size="12" font-weight="500" fill="#7a3c00">Zalo OA / Telegram bot</text>
+      <!-- Email 8h -->
+      <rect x="875" y="130" width="200" height="38" rx="8" fill="#fdf0e8" stroke="#f0b88a" stroke-width="0.8"/>
+      <text x="975" y="153" text-anchor="middle" font-size="12" font-weight="500" fill="#7a3c00">Email báo cáo 8h sáng</text>
+      <!-- Chat AI -->
+      <rect x="875" y="178" width="200" height="38" rx="8" fill="#fdf0e8" stroke="#f0b88a" stroke-width="0.8"/>
+      <text x="975" y="201" text-anchor="middle" font-size="12" font-weight="500" fill="#7a3c00">Chat AI hỏi đáp nội bộ</text>
+
+      <!-- ══ ARROWS COL1 → COL2 ══ -->
+      <line x1="182" y1="53" x2="222" y2="53" stroke="#b4b0a8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="182" y1="101" x2="222" y2="115" stroke="#b4b0a8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="182" y1="149" x2="222" y2="163" stroke="#b4b0a8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="182" y1="197" x2="222" y2="211" stroke="#b4b0a8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="182" y1="245" x2="222" y2="259" stroke="#b4b0a8" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- RED arrow for STT (needs VoIP) -->
+      <line x1="182" y1="53" x2="222" y2="53" stroke="#8b1a1a" stroke-width="1.2" stroke-dasharray="4 2" marker-end="url(#arr-red)"/>
+
+      <!-- ══ ARROWS COL2 → COL3 ══ -->
+      <line x1="393" y1="59" x2="437" y2="59" stroke="#b4b0a8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="393" y1="115" x2="437" y2="121" stroke="#b4b0a8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="393" y1="163" x2="437" y2="183" stroke="#b4b0a8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="393" y1="211" x2="437" y2="121" stroke="#b4b0a8" stroke-width="0.8" stroke-dasharray="3 2" marker-end="url(#arr)"/>
+
+      <!-- ══ ARROWS COL3 → COL4 ══ -->
+      <line x1="608" y1="59" x2="656" y2="59" stroke="#b4b0a8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="608" y1="121" x2="656" y2="121" stroke="#b4b0a8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="608" y1="183" x2="656" y2="183" stroke="#b4b0a8" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- ══ ARROWS COL4 → COL5 ══ -->
+      <line x1="828" y1="59" x2="872" y2="53" stroke="#b4b0a8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="828" y1="121" x2="872" y2="91" stroke="#b4b0a8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="828" y1="183" x2="872" y2="149" stroke="#b4b0a8" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="828" y1="245" x2="872" y2="197" stroke="#b4b0a8" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- NOTE: VoIP -->
+      <rect x="18" y="294" width="370" height="28" rx="6" fill="#fff7f7" stroke="#f0aaaa" stroke-width="0.8"/>
+      <text x="28" y="312" font-size="10.5" fill="#8b1a1a">⚠  Đường đứt = cần VoIP trước mới xử lý được ghi âm cuộc gọi</text>
+    </svg>
+  </div>
+</div>
+
+<!-- BÁO CÁO TABLE -->
+<div class="wrap">
+  <div class="eyebrow">Báo cáo theo chu kỳ</div>
+  <table class="report-table">
+    <thead>
+      <tr>
+        <th style="width:110px">Chu kỳ</th>
+        <th style="width:200px">Module</th>
+        <th>Nội dung AI phân tích</th>
+        <th style="width:160px">Stack kỹ thuật</th>
+        <th style="width:120px">Khả thi</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- NGÀY -->
+      <tr>
+        <td rowspan="4"><span class="cycle-tag day"><span class="dot"></span>Ngày</span></td>
+        <td><span class="module-name">Hoạt động sales</span></td>
+        <td><ul class="items-list">
+          <li>Số cuộc gọi · thời lượng · số khách mới / cũ</li>
+          <li>Tin nhắn Zalo · báo giá · cuộc hẹn</li>
+          <li>Tỷ lệ phản hồi · tỷ lệ chuyển đổi</li>
+        </ul></td>
+        <td><span class="tech-mono">SQL + CRM API</span></td>
+        <td><span class="badge high">Khả thi cao</span></td>
+      </tr>
+      <tr>
+        <td><span class="module-name">Chất lượng giao tiếp</span><span class="module-desc">Chấm điểm từng cuộc gọi</span></td>
+        <td><ul class="items-list">
+          <li>Lịch sự · ngôn ngữ tiêu cực · tranh cãi</li>
+          <li>Phát hiện cảm xúc khách hàng</li>
+          <li>Cảnh báo nguy cơ mất khách</li>
+        </ul></td>
+        <td><span class="tech-mono">STT + LLM scoring</span></td>
+        <td><span class="badge hard">Khó — cần VoIP</span></td>
+      </tr>
+      <tr>
+        <td><span class="module-name">Insight khách hàng</span></td>
+        <td><ul class="items-list">
+          <li>Pain point nhiều nhất trong ngày</li>
+          <li>Đối thủ được nhắc tên</li>
+          <li>Lý do chưa chốt</li>
+        </ul></td>
+        <td><span class="tech-mono">LLM summarization</span></td>
+        <td><span class="badge high">Khả thi cao</span></td>
+      </tr>
+      <tr>
+        <td><span class="module-name">Cơ hội bán hàng</span></td>
+        <td><ul class="items-list">
+          <li>Khách có khả năng chốt cao nhất</li>
+          <li>Deal đang bị trì hoãn / nguy cơ mất</li>
+        </ul></td>
+        <td><span class="tech-mono">Rule-based + LLM</span></td>
+        <td><span class="badge high">Khả thi cao</span></td>
+      </tr>
+
+      <!-- TUẦN -->
+      <tr>
+        <td rowspan="4"><span class="cycle-tag week"><span class="dot"></span>Tuần</span></td>
+        <td><span class="module-name">Hiệu suất sales team</span></td>
+        <td><ul class="items-list">
+          <li>Top sales · sales giảm sút · tỷ lệ chốt theo người</li>
+          <li>Khách hàng mới · doanh thu dự kiến</li>
+        </ul></td>
+        <td><span class="tech-mono">SQL aggregation</span></td>
+        <td><span class="badge high">Khả thi cao</span></td>
+      </tr>
+      <tr>
+        <td><span class="module-name">Nguyên nhân thắng / thua deal</span></td>
+        <td><ul class="items-list">
+          <li>Win: tư vấn kỹ · phản hồi nhanh · giá cạnh tranh</li>
+          <li>Lose: giá cao · giao hàng lâu · follow-up kém</li>
+        </ul></td>
+        <td><span class="tech-mono">LLM + transcript</span></td>
+        <td><span class="badge high">Khả thi cao</span></td>
+      </tr>
+      <tr>
+        <td><span class="module-name">Insight thị trường</span></td>
+        <td><ul class="items-list">
+          <li>Xu hướng nhu cầu ngành (thực phẩm, nông sản…)</li>
+          <li>Tín hiệu: tiết kiệm điện, IoT, máy nhỏ gọn</li>
+        </ul></td>
+        <td><span class="tech-mono">LLM trend analysis</span></td>
+        <td><span class="badge hard">Khó — cần volume data</span></td>
+      </tr>
+      <tr>
+        <td><span class="module-name">Đề xuất hành động</span></td>
+        <td><ul class="items-list">
+          <li>AI đề xuất cụ thể cho quản lý</li>
+          <li>Đào tạo · tài liệu · điều chỉnh chiến lược</li>
+        </ul></td>
+        <td><span class="tech-mono">LLM recommendation</span></td>
+        <td><span class="badge high">Khả thi cao</span></td>
+      </tr>
+
+      <!-- THÁNG -->
+      <tr>
+        <td rowspan="4"><span class="cycle-tag month"><span class="dot"></span>Tháng</span></td>
+        <td><span class="module-name">Dự báo doanh thu 30 ngày</span></td>
+        <td><ul class="items-list">
+          <li>Pipeline + tỷ lệ chốt + mùa vụ</li>
+          <li>Hiệu suất sales cá nhân</li>
+        </ul></td>
+        <td><span class="tech-mono">ML time-series</span></td>
+        <td><span class="badge medium">Trung bình</span></td>
+      </tr>
+      <tr>
+        <td><span class="module-name">Phân tích sản phẩm</span></td>
+        <td><ul class="items-list">
+          <li>Dòng máy bán tốt / bị chê · tính năng được thích</li>
+          <li>Đề xuất cải tiến từ khách (vận hành, kỹ thuật, bảo trì)</li>
+        </ul></td>
+        <td><span class="tech-mono">LLM + CRM data</span></td>
+        <td><span class="badge high">Khả thi cao</span></td>
+      </tr>
+      <tr>
+        <td><span class="module-name">Phân tích khách hàng</span></td>
+        <td><ul class="items-list">
+          <li>Ngành tiềm năng nhất · quy mô dễ chốt</li>
+          <li>Khu vực tăng trưởng</li>
+        </ul></td>
+        <td><span class="tech-mono">SQL segmentation</span></td>
+        <td><span class="badge high">Khả thi cao</span></td>
+      </tr>
+      <tr>
+        <td><span class="module-name">Phân tích nhân sự sales</span></td>
+        <td><ul class="items-list">
+          <li>Kỹ năng tư vấn · xử lý phản đối · tốc độ phản hồi</li>
+          <li>Tỷ lệ chốt cá nhân so team</li>
+        </ul></td>
+        <td><span class="tech-mono">STT + LLM eval</span></td>
+        <td><span class="badge hard">Khó — cần ghi âm đủ</span></td>
+      </tr>
+
+      <!-- QUÝ -->
+      <tr>
+        <td rowspan="4"><span class="cycle-tag qtr"><span class="dot"></span>Quý</span></td>
+        <td><span class="module-name">Dự báo 60 / 90 ngày</span></td>
+        <td><ul class="items-list">
+          <li>Pipeline toàn quý · mùa vụ ngành · lịch sử</li>
+          <li>Yêu cầu 6+ tháng data sạch</li>
+        </ul></td>
+        <td><span class="tech-mono">ML forecasting</span></td>
+        <td><span class="badge low">Cần data trước</span></td>
+      </tr>
+      <tr>
+        <td><span class="module-name">Phân tích đối thủ cạnh tranh</span></td>
+        <td><ul class="items-list">
+          <li>Đối thủ xuất hiện nhiều nhất (Orion, Mactech…)</li>
+          <li>Điểm yếu / mạnh Hanel PT so đối thủ</li>
+        </ul></td>
+        <td><span class="tech-mono">LLM + transcript</span></td>
+        <td><span class="badge hard">Khó — cần volume</span></td>
+      </tr>
+      <tr>
+        <td><span class="module-name">Phân tích nhân sự toàn quý</span></td>
+        <td><ul class="items-list">
+          <li>Đánh giá kỹ năng sâu · mức chăm sóc khách</li>
+          <li>So sánh hiệu suất theo quý</li>
+        </ul></td>
+        <td><span class="tech-mono">STT + LLM eval</span></td>
+        <td><span class="badge hard">Khó — cần ghi âm đủ</span></td>
+      </tr>
+      <tr>
+        <td><span class="module-name">Phát hiện gian dối sales</span></td>
+        <td><ul class="items-list">
+          <li>CRM ảo · gọi nhưng không nói chuyện</li>
+          <li>Bỏ follow-up · ghi chú sai pattern</li>
+        </ul></td>
+        <td><span class="tech-mono">Anomaly ML</span></td>
+        <td><span class="badge medium">Trung bình</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- PREREQ SECTION -->
+<div class="prereq-wrap">
+  <div class="eyebrow">Điều kiện để làm được phần khó</div>
+  <div class="prereq-grid">
+
+    <div class="prereq-card">
+      <div class="prereq-head">
+        <div class="prereq-head-title">Chất lượng giao tiếp</div>
+        <div class="prereq-head-sub">STT + Sentiment + Chấm điểm sales</div>
+      </div>
+      <div class="prereq-body">
+        <div class="prereq-item">
+          <div class="prereq-num">1</div>
+          <div class="prereq-text"><strong>Softphone / VoIP bắt buộc</strong> — Stringee, MiPBX, hoặc Zalo for Business. Toàn bộ cuộc gọi phải đi qua hệ thống này, không dùng máy cá nhân.</div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-num">2</div>
+          <div class="prereq-text"><strong>File ghi âm lưu tập trung</strong> — S3 hoặc server nội bộ, tự động upload sau mỗi cuộc gọi.</div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-num">3</div>
+          <div class="prereq-text"><strong>STT tiếng Việt đủ tốt</strong> — Whisper large-v3 hoặc Google STT. Cần fine-tune nếu sales nói giọng địa phương hoặc tiếng lóng ngành.</div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-num">4</div>
+          <div class="prereq-text"><strong>Rubric chấm điểm</strong> — định nghĩa rõ tiêu chí: lịch sự, khai thác nhu cầu, xử lý phản đối, tránh ép sales. LLM mới có căn cứ chấm.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prereq-card">
+      <div class="prereq-head">
+        <div class="prereq-head-title">Phân tích nhân sự sales</div>
+        <div class="prereq-head-sub">LLM eval · kỹ năng · hiệu suất cá nhân</div>
+      </div>
+      <div class="prereq-body">
+        <div class="prereq-item">
+          <div class="prereq-num">1</div>
+          <div class="prereq-text"><strong>Ghi âm đủ số lượng</strong> — tối thiểu 20–30 cuộc/tháng/người để đánh giá có ý nghĩa thống kê.</div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-num">2</div>
+          <div class="prereq-text"><strong>Transcript được gán nhân viên</strong> — mỗi file ghi âm phải biết là của ai. Cần metadata: sales_id, timestamp, khách hàng.</div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-num">3</div>
+          <div class="prereq-text"><strong>Dữ liệu deal kết quả</strong> — CRM phải ghi rõ deal đó thắng hay thua, để AI học tương quan hành vi → kết quả.</div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-num">4</div>
+          <div class="prereq-text"><strong>Chạy ít nhất 3 tháng</strong> trước khi có đánh giá đủ tin cậy để dùng cho HR.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prereq-card">
+      <div class="prereq-head">
+        <div class="prereq-head-title">Insight thị trường & Đối thủ</div>
+        <div class="prereq-head-sub">NLP · trend detection · competitor tracking</div>
+      </div>
+      <div class="prereq-body">
+        <div class="prereq-item">
+          <div class="prereq-num">1</div>
+          <div class="prereq-text"><strong>Volume transcript tối thiểu 50+ cuộc/tuần</strong> — dưới mức này AI không đủ signal để phát hiện xu hướng, dễ hallucinate.</div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-num">2</div>
+          <div class="prereq-text"><strong>Ghi chú CRM có cấu trúc</strong> — sales phải ghi rõ: khách nhắc đối thủ nào, lý do chưa mua. Ghi chú rời rạc → AI không tổng hợp được.</div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-num">3</div>
+          <div class="prereq-text"><strong>Danh sách đối thủ cố định</strong> — Orion, Mactech, hàng Trung Quốc… phải định nghĩa trước để AI nhận dạng đúng tên biến thể.</div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-num">4</div>
+          <div class="prereq-text"><strong>Lịch sử 3+ tháng</strong> để so sánh xu hướng tăng/giảm có ý nghĩa.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MATRIX -->
+<div class="matrix-wrap" style="margin-top: 32px;">
+  <div class="eyebrow">Ma trận độ khó &amp; ưu tiên thực thi</div>
+  <p class="matrix-subtitle">Làm từ góc phải dưới lên — dễ + giá trị cao trước.</p>
+
+  <div class="matrix-outer">
+    <div class="matrix-yaxis">
+      <span class="matrix-yaxis-label">Độ phức tạp kỹ thuật ↑</span>
+    </div>
+    <div class="matrix-body">
+      <div class="matrix-grid">
+
+        <!-- TOP LEFT: Khó + Ít ưu tiên -->
+        <div class="quadrant q-hard-low" style="grid-column:1; grid-row:1;">
+          <div class="quadrant-label">Khó · Ít ưu tiên — để sau</div>
+          <div class="mcard"><div class="mcard-title">Insight thị trường tự động</div></div>
+          <div class="mcard"><div class="mcard-title">Dự báo 60–90 ngày</div></div>
+          <div class="mcard"><div class="mcard-title">Đối thủ cạnh tranh tự động</div></div>
+        </div>
+
+        <!-- TOP RIGHT: Khó + Ưu tiên cao -->
+        <div class="quadrant q-hard-high" style="grid-column:2; grid-row:1;">
+          <div class="quadrant-label">Khó · Lên kế hoạch ngay</div>
+          <div class="mcard priority">
+            <div class="mcard-title">Chất lượng giao tiếp</div>
+            <span class="mpill mpill-fire">Ưu tiên số 1</span>
+          </div>
+          <div class="mcard"><div class="mcard-title">Phân tích nhân sự sales</div></div>
+          <div class="mcard"><div class="mcard-title">Deal scoring / Rủi ro</div></div>
+          <div class="mcard"><div class="mcard-title">Phát hiện gian dối</div></div>
+        </div>
+
+        <!-- BOTTOM LEFT: Dễ + Ít ưu tiên -->
+        <div class="quadrant q-easy-low" style="grid-column:1; grid-row:2;">
+          <div class="quadrant-label">Dễ · Ít ưu tiên</div>
+          <div class="mcard"><div class="mcard-title">Export báo cáo Excel / PDF</div></div>
+          <div class="mcard"><div class="mcard-title">Phân loại khách theo ngành</div></div>
+        </div>
+
+        <!-- BOTTOM RIGHT: Dễ + Làm ngay -->
+        <div class="quadrant q-easy-high" style="grid-column:2; grid-row:2;">
+          <div class="quadrant-label">Dễ · Bắt đầu ngay</div>
+          <div class="mcard go">
+            <div class="mcard-title">Báo cáo hoạt động ngày</div>
+            <span class="mpill mpill-go">Làm ngay</span>
+          </div>
+          <div class="mcard"><div class="mcard-title">Cảnh báo follow-up tự động</div></div>
+          <div class="mcard"><div class="mcard-title">Insight KH + Cải tiến SP</div></div>
+          <div class="mcard"><div class="mcard-title">Nguyên nhân thắng / thua deal</div></div>
+        </div>
+
+      </div>
+    </div>
+    <div class="matrix-xaxis">
+      <span class="matrix-xaxis-label">Ít ưu tiên</span>
+      <span class="matrix-xaxis-label">Ưu tiên cao →</span>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="legend">
+    <div class="legend-item"><span class="badge high">Khả thi cao</span> SQL / LLM — 1–3 tháng</div>
+    <div class="legend-item"><span class="badge medium">Trung bình</span> ML model — cần pipeline</div>
+    <div class="legend-item"><span class="badge low">Cần data trước</span> 6+ tháng lịch sử</div>
+    <div class="legend-item"><span class="badge hard">Khó</span> Cần VoIP hoặc volume transcript</div>
+  </div>
+  <div>Hanel PT AI CRM · Tech Map v1.0</div>
+</div>
+
+</body>
+</html>
